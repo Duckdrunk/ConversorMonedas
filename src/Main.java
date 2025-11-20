@@ -43,10 +43,11 @@ public class Main {
                 default:
                     return;
             }
+            System.out.println("Ingrese el valor que desea convertir:");
             double cantidad = sc.nextDouble();
-            Moneda moneda = consulta.buscaMoneda(inicio);
-            double cambio = moneda.conversion_rates().get(fin);
-            System.out.println(cantidad*cambio);
+            ConvertirMoneda convertir = new ConvertirMoneda();
+            double cambio = convertir.obtenerPrecio(inicio,fin);
+            System.out.printf("El valor %s [%s]corresponde al valor final de =>> %s [%s]%n", cantidad, inicio, cantidad * cambio, fin);
         }
     }
 
