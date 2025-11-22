@@ -5,53 +5,50 @@ import java.util.Scanner;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
 
-    public static void main(String[] args) {
-        ConsultarMoneda consulta = new ConsultarMoneda();
-        Scanner sc = new Scanner(System.in);
-        int opcion=0;
-        while (opcion!=7){
-            Menu();
-            opcion=sc.nextInt();
+    static final Map<Integer,String[]> opciones = Map.of(
+            1, new String[]{"USD", "ARS"},
+            2, new String[]{"ARS", "USD"},
+            3, new String[]{"USD", "BRL"},
+            4, new String[]{"BRL", "USD"},
+            5, new String[]{"USD", "COP"},
+            6, new String[]{"COP", "USD"}
+    );
 
-            String inicio="";
-            String fin;
-            switch (opcion){
-                case 1:
-                    inicio="USD";
-                    fin="ARS";
-                    break;
-                case 2:
-                    inicio="ARS";
-                    fin = "USD";
-                    break;
-                case 3:
-                    inicio="USD";
-                    fin = "BRL";
-                    break;
-                case 4:
-                    inicio="BRL";
-                    fin="USD";
-                    break;
-                case 5:
-                    inicio="USD";
-                    fin="COP";
-                    break;
-                case 6:
-                    inicio="COP";
-                    fin="USD";
-                    break;
-                default:
-                    return;
+    static final int opcionSalida = 7;
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        ConsultarMoneda consultor = new ConsultarMoneda();
+        ConvertirMoneda convertor = new ConvertirMoneda(consultor);
+
+        boolean seguir = true;
+
+        while (seguir){
+            menu();
+            int opcion = sc.nextInt();
+
+            if(opcion==opcionSalida){
+                seguir = false;
             }
+
+            if(!opciones.containsKey(opcion)){
+                System.out.println("Opción inválida");
+            }
+
+            String inicio = opciones.get(opcion)[0];
+            String fin = opciones.get(opcion)[1];
+
             System.out.println("Ingrese el valor que desea convertir:");
             double cantidad = sc.nextDouble();
-            ConvertirMoneda convertir = new ConvertirMoneda();
-            double cambio = convertir.obtenerPrecio(inicio,fin);
-            System.out.printf("El valor %s [%s]corresponde al valor final de =>> %s [%s]%n", cantidad, inicio, cantidad * cambio, fin);
+
+            double res = convertor.convertir(inicio,fin,cantidad);
+
+            System.out.printf("El valor %.2f [%s] corresponde a %.2f [%s]%n",
+                    cantidad, inicio, res, fin);
         }
     }
 
-    static void Menu(){
+    static void menu(){
         System.out.print(
                         """
                         ****************************************
